@@ -1,7 +1,6 @@
 function Home() {
   return (
     <>
-      {/* hi */}
       <div className="min-h-screen w-full">
         <div className="flex flex-col items-center h-full w-60  overflow-hidden text-white bg-black rounded">
           <a className="flex items-center w-full px-5 mt-3" href="#">
@@ -92,7 +91,7 @@ function Home() {
             </div>
           </div>
           <a
-            className="flex items-center justify-center w-full h-16 mt-auto bg-gray-800 hover:bg-gray-700 hover:text-gray-300"
+            className="flex items-center justify-center w-full h-16 mt-auto bg-gray-800 hover:bg-gray-700 hover:text-gray-300 "
             href="#"
           >
             <svg

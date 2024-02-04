@@ -3,11 +3,24 @@
 import { useState } from "react";
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { db } from "../firebase";
+import {
+  query,
+  collection,
+  onSnapshot,
+  updateDoc,
+  doc,
+  addDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import { NavLink } from "react-router-dom";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [creds, setCreds] = useState();
+  const [token, setToken] = useState("");
+  const [uid, setUid] = useState("");
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -18,13 +31,28 @@ const SignUp = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert("Account successfully created");
-    } catch (error) {
-      alert(error);
-    }
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((credentials) => {
+        alert("Account successfully created");
+        console.log(credentials);
+        setCreds(credentials);
+      })
+      .then(() => {
+        setToken(creds.user.accessToken);
+        setEmail(creds.user.email);
+        setUid(creds.user.reloadUserInfo.localId);
+      })
+      .then(() => {
+        console.log(token + "🍩" + uid + "🍩" + email);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
+
+  // uid of a user
+  // console.log(creds.user.reloadUserInfo.localId);
 
   return (
     <div className="bg-slate-100">
@@ -72,6 +100,11 @@ const SignUp = () => {
             >
               Sign Up
             </button>
+            <NavLink to="/login">
+              <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">
+                Login
+              </button>
+            </NavLink>
           </form>
         </div>
       </div>

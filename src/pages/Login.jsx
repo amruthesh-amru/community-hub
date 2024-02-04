@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { NavLink } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -72,6 +73,11 @@ const Login = () => {
             >
               Login
             </button>
+            <NavLink to="/signUp">
+              <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">
+                SignUp
+              </button>
+            </NavLink>
           </form>
         </div>
       </div>
