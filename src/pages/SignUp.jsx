@@ -1,5 +1,5 @@
 // SignupPage.js
-
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -11,16 +11,25 @@ import {
   updateDoc,
   doc,
   addDoc,
+  setDoc,
   deleteDoc,
 } from "firebase/firestore";
 import { NavLink } from "react-router-dom";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [currentYear, setCurrentYear] = useState("");
+  const [isStudent, setIsStudent] = useState(true);
+
   const [creds, setCreds] = useState();
   const [token, setToken] = useState("");
   const [uid, setUid] = useState("");
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -28,84 +37,206 @@ const SignUp = () => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+  const handleUserNameChange = (e) => {
+    setUserName(e.target.value);
+  };
+  const handleCurrentYearChange = (e) => {
+    setCurrentYear(e.target.value);
+  };
+  const handleIsStudentChange = (e) => {
+    setIsStudent(e.target.value);
+  };
+  // console.log(name, userName, email, currentYear, isStudent, password);
 
   const handleSignup = async (e) => {
     e.preventDefault();
-
     createUserWithEmailAndPassword(auth, email, password)
       .then((credentials) => {
         alert("Account successfully created");
-        console.log(credentials);
+        console.log("🧀", credentials);
         setCreds(credentials);
+        setToken(credentials.user.accessToken);
+        setEmail(credentials.user.email);
+        // setUid(" ");
+        setUid(credentials.user.uid);
+        console.log("UID:", credentials.user.uid);
+        const docRef = doc(db, "user details", credentials.user.uid);
+        const result = setDoc(
+          docRef,
+          {
+            name: name,
+            usename: userName,
+            email: email,
+            currentYear: currentYear,
+            student: isStudent,
+            userId: credentials.user.uid,
+          },
+          { merge: true }
+        );
+        navigate("/login");
       })
-      .then(() => {
-        setToken(creds.user.accessToken);
-        setEmail(creds.user.email);
-        setUid(creds.user.reloadUserInfo.localId);
-      })
-      .then(() => {
-        console.log(token + "🍩" + uid + "🍩" + email);
-      })
-      .catch((err) => {
-        console.log(err.message);
+      .catch((error) => {
+        // Handle error if createUserWithEmailAndPassword fails
+        alert("Error signing up:", error);
+        // You might want to show an error message to the user
       });
   };
 
-  // uid of a user
-  // console.log(creds.user.reloadUserInfo.localId);
-
   return (
-    <div className="bg-slate-100">
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="bg-white p-8 rounded shadow-md w-96">
-          <form action="">
-            <h2 className="text-2xl font-semibold mb-4">Sign Up</h2>
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-600"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={email}
-                onChange={handleEmailChange}
-                className="mt-1 p-2 w-full border rounded-md"
-                placeholder="Your email"
-              />
+    <div className=" w-full h-full">
+      <div className="font-mono ">
+        <div className="container mx-auto">
+          <div className="flex justify-center px-6 my-12">
+            <div className="w-full xl:w-3/4 lg:w-11/12 flex">
+              <div className="w-full h-auto bg-gray-400 hidden lg:block lg:w-5/12 bg-cover rounded-l-lg bgImage"></div>
+
+              <div className="w-full lg:w-7/12 bg-white p-5 rounded-lg lg:rounded-l-none">
+                <h3 className="pt-4 text-2xl text-center">
+                  Create an Account!
+                </h3>
+                <form className="px-8 pt-6 pb-8 mb-4 bg-white rounded">
+                  <div className="mb-4 md:flex md:justify-between">
+                    <div className="mb-4 md:mr-2 md:mb-0">
+                      <label
+                        className="block mb-2 text-sm font-bold text-gray-700"
+                        htmlFor="firstName"
+                      >
+                        Name
+                      </label>
+                      <input
+                        className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                        id="name"
+                        type="text"
+                        placeholder=" Name"
+                        onChange={handleNameChange}
+                        value={name}
+                      />
+                    </div>
+                    <div className="md:ml-2">
+                      <label
+                        className="block mb-2 text-sm font-bold text-gray-700"
+                        htmlFor="firstName"
+                      >
+                        Username
+                      </label>
+                      <input
+                        className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                        id="firstName"
+                        type="text"
+                        placeholder="Username"
+                        onChange={handleUserNameChange}
+                        value={userName}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <label
+                      className="block mb-2 text-sm font-bold text-gray-700"
+                      htmlFor="email"
+                    >
+                      Email
+                    </label>
+                    <input
+                      className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      id="email"
+                      type="email"
+                      placeholder="Email"
+                      onChange={handleEmailChange}
+                      value={email}
+                    />
+                  </div>
+                  <div className="mb-4 md:flex md:justify-between">
+                    <div className="mb-4 md:mr-2 md:mb-0">
+                      <label
+                        className="block mb-2 text-sm font-bold text-gray-700"
+                        htmlFor="currentYear"
+                      >
+                        Current Year
+                      </label>
+
+                      <select
+                        id="currentYear"
+                        className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                        onChange={handleCurrentYearChange}
+                        value={currentYear}
+                      >
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                      </select>
+                    </div>
+                    <div className="md:ml-2">
+                      <label
+                        className="block mb-2 text-sm font-bold text-gray-700"
+                        htmlFor="isStudent"
+                      >
+                        Student ?
+                      </label>
+                      <select
+                        id="isStudent"
+                        className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                        onChange={handleIsStudentChange}
+                        value={isStudent}
+                      >
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="mb-4 md:flex md:justify-between">
+                    <div className="mb-4 md:mr-2 md:mb-0">
+                      <label
+                        className="block mb-2 text-sm font-bold text-gray-700"
+                        htmlFor="password"
+                      >
+                        Password
+                      </label>
+                      <input
+                        className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                        id="password"
+                        type="password"
+                        placeholder="******************"
+                        onChange={handlePasswordChange}
+                        value={password}
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-6 text-center">
+                    <button
+                      className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                      onClick={handleSignup}
+                    >
+                      Register Account
+                    </button>
+                  </div>
+                  <hr className="mb-6 border-t" />
+                  <div className="text-center">
+                    <a
+                      className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
+                      href="#"
+                    >
+                      Forgot Password?
+                    </a>
+                  </div>
+                  <div className="text-center">
+                    <NavLink to="/login">
+                      <div
+                        className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
+                        href="#"
+                      >
+                        Already have an account? Login!
+                      </div>
+                    </NavLink>
+                  </div>
+                </form>
+              </div>
             </div>
-            <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-600"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={password}
-                onChange={handlePasswordChange}
-                className="mt-1 p-2 w-full border rounded-md"
-                placeholder="Your password"
-              />
-            </div>
-            <button
-              onClick={handleSignup}
-              className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
-            >
-              Sign Up
-            </button>
-            <NavLink to="/login">
-              <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">
-                Login
-              </button>
-            </NavLink>
-          </form>
+          </div>
         </div>
       </div>
     </div>

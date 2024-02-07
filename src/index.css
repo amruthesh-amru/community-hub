@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.bgImage {
+  background-image: url("https://source.unsplash.com/Mv9hjnEUHR4/600x800");
+}
+.bgImagelogin {
+  background-image: url("https://source.unsplash.com/Mv9hjnEUHR4/500x600");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
