@@ -1,7 +1,21 @@
+import { useState } from "react";
+
 function Home() {
+  const [tweetText, setTweetText] = useState("");
+
+  const handleInputChange = (event) => {
+    setTweetText(event.target.value);
+  };
+  const handleTweetSubmit = () => {
+    // Here you can implement the logic to submit the tweet
+    // For simplicity, let's just log the tweet text for now
+
+    // Reset the input field after submitting
+    setTweetText("");
+  };
   return (
     <>
-      <div className="min-h-screen w-full">
+      {/* <div className="min-h-screen w-full">
         <div className="flex flex-col items-center h-full w-60  overflow-hidden text-white bg-black rounded">
           <a className="flex items-center w-full px-5 mt-3" href="#">
             <i className="fa-solid fa-user-graduate"></i>
@@ -110,6 +124,99 @@ function Home() {
             </svg>
             <span className="ml-2 text-sm font-medium">Account</span>
           </a>
+        </div>
+      </div> */}
+      <div>
+        <div className="w-[85%] mx-auto my-0 p-4 flex">
+          <div className="w-[22%]">
+            <ul className="flex flex-col gap-8 text-[1.5rem] text-[#0f1419] font-[200] w-full">
+              <li>
+                <i className="fa-solid fa-user-graduate"></i>
+                <span className="pl-4 text-[20px]  ml-2 text-sm font-bold">
+                  Community Hub
+                </span>
+              </li>
+              <li>
+                <i className="fa-solid fa-heart"></i>
+                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                  For You
+                </span>
+              </li>
+              <li>
+                <i className="fa-solid fa-brain"></i>
+                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                  Classroom Collab
+                </span>
+              </li>
+              <li>
+                <i className="fa-solid fa-book"></i>
+                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                  Acadamic Updates
+                </span>
+              </li>
+              <li>
+                <i className="fa-solid fa-magnifying-glass"></i>
+                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                  Lost And Found
+                </span>
+              </li>
+              <li>
+                <i className="fa-solid fa-briefcase"></i>
+                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                  Job And Internship
+                </span>
+              </li>
+              <li>
+                <i className="fa-solid fa-person-running"></i>
+                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                  Bunk Mate
+                </span>
+              </li>
+              <li>
+                <i className="fa-solid fa-tower-broadcast"></i>
+                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                  Emergency Alerts
+                </span>
+              </li>
+              <li>
+                <button className="pl-[32px] pt-2 pb-2 text-center text-white font-[600] bg-[#1d9bf0] pr-[32px] w-full rounded-full">
+                  Post
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div className="w-[50%] ">
+            <div className="w-full border border-[rgba(239,243,244,1.00)] p-3 flex gap-3">
+              <div className="w-[40px] h-[40px] bg-red-200 rounded-full">
+                <img src="" alt="" />
+              </div>
+              <div className="w-full ">
+                <form action="">
+                  {/* <input
+                    type="text"
+                    placeholder="What is happening?"
+                    className="m-2 w-full outline-none placeholder:font-[400] placeholder:text-[1.2rem] overflow-hidden  whitespace-pre-wrap relative"
+                  /> */}
+                  <textarea
+                    className="w-full text-lg resize-none outline-none"
+                    placeholder="What's happening?"
+                    value={tweetText}
+                    onChange={handleInputChange}
+                    maxLength={280} // You can adjust the maximum character limit as needed
+                    rows={4} // You can adjust the number of rows to display
+                  />
+                </form>
+                <div className="p-3 flex justify-between items-center border-t border-[rgba(239,243,244,1.00)]">
+                  <i className="fa-regular fa-image text-[#1d9bf0]"></i>
+                  <div>
+                    <button className="text-white font-[600] rounded-full pl-6 pr-6 pt-1 pb-1 bg-[#1d9bf0]">
+                      Post
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>

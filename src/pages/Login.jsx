@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const navigate = useNavigate();
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -23,6 +23,7 @@ const Login = () => {
       const response = await signInWithEmailAndPassword(auth, email, password);
       alert("Account successfully Logged In");
       console.log(response);
+      navigate("/");
     } catch (error) {
       alert(error);
     }
@@ -74,59 +75,7 @@ const Login = () => {
                         value={password}
                       />
                     </div>
-                    {/* <div className="mb-4 md:flex md:justify-between">
-                      <div className="mb-4 md:mr-2 md:mb-0">
-                        <label
-                          className="block mb-2 text-sm font-bold text-gray-700"
-                          htmlFor="currentYear"
-                        >
-                          Current Year
-                        </label>
 
-                        <select
-                          id="currentYear"
-                          className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                        >
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                        </select>
-                      </div>
-                      <div className="md:ml-2">
-                        <label
-                          className="block mb-2 text-sm font-bold text-gray-700"
-                          htmlFor="isStudent"
-                        >
-                          Student ?
-                        </label>
-                        <select
-                          id="isStudent"
-                          className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                        >
-                          <option value="yes">Yes</option>
-                          <option value="no">No</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="mb-4 md:flex md:justify-between">
-                      <div className="mb-4 md:mr-2 md:mb-0">
-                        <label
-                          className="block mb-2 text-sm font-bold text-gray-700"
-                          htmlFor="password"
-                        >
-                          Password
-                        </label>
-                        <input
-                          className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                          id="password"
-                          type="password"
-                          placeholder="******************"
-                          onChange={handlePasswordChange}
-                          value={password}
-                        />
-                      </div>
-                    </div> */}
                     <div className="mb-6 text-center">
                       <button
                         className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
