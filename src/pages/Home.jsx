@@ -1,17 +1,35 @@
 import { useState } from "react";
+import { db, imgDB } from "../firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
+import { doc, setDoc } from "firebase/firestore";
 
 function Home() {
-  const [tweetText, setTweetText] = useState("");
-
-  const handleInputChange = (event) => {
-    setTweetText(event.target.value);
+  const [tweetImageUrl, settweetImageUrl] = useState("");
+  const uid = localStorage.getItem("uid");
+  let imgValue;
+  const handletweetImageUpload = (e) => {
+    imgValue = e.target.files[0];
+    console.log(imgValue);
   };
-  const handleTweetSubmit = () => {
-    // Here you can implement the logic to submit the tweet
-    // For simplicity, let's just log the tweet text for now
-
-    // Reset the input field after submitting
-    setTweetText("");
+  const uploadImageToDb = (imgValue) => {
+    const imgs = ref(imgDB, `tweetImages/${v4()}`);
+    uploadBytes(imgs, imgValue).then((data) => {
+      console.log(data, "imgs");
+      getDownloadURL(data.ref).then((val) => {
+        console.log(val);
+        settweetImageUrl(val);
+        const docRef = doc(db, "tweets", uid);
+        const result = setDoc(
+          docRef,
+          {
+            tweeImgUrl: val,
+            tweetTxt: "testing",
+          },
+          { merge: true }
+        );
+      });
+    });
   };
   return (
     <>
@@ -188,28 +206,38 @@ function Home() {
           <div className="w-[50%] ">
             <div className="w-full border border-[rgba(239,243,244,1.00)] p-3 flex gap-3">
               <div className="w-[40px] h-[40px] bg-red-200 rounded-full">
-                <img src="" alt="" />
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/community-hub-auth.appspot.com/o/tweetImages%2F40164b4e-67bc-4832-bb79-a27b8d6ecf94?alt=media&token=4047b773-375b-4c79-a628-e8a3265a3a96"
+                  alt=""
+                />
               </div>
               <div className="w-full ">
                 <form action="">
-                  {/* <input
-                    type="text"
-                    placeholder="What is happening?"
-                    className="m-2 w-full outline-none placeholder:font-[400] placeholder:text-[1.2rem] overflow-hidden  whitespace-pre-wrap relative"
-                  /> */}
                   <textarea
                     className="w-full text-lg resize-none outline-none"
                     placeholder="What's happening?"
-                    value={tweetText}
-                    onChange={handleInputChange}
                     maxLength={280} // You can adjust the maximum character limit as needed
                     rows={4} // You can adjust the number of rows to display
                   />
                 </form>
                 <div className="p-3 flex justify-between items-center border-t border-[rgba(239,243,244,1.00)]">
-                  <i className="fa-regular fa-image text-[#1d9bf0]"></i>
+                  <label>
+                    <i className="text-[20px] fa-regular fa-image text-[#1d9bf0]"></i>
+
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,image/JPG"
+                      className="hidden"
+                      onChange={(e) => {
+                        handletweetImageUpload(e);
+                      }}
+                    />
+                  </label>
                   <div>
-                    <button className="text-white font-[600] rounded-full pl-6 pr-6 pt-1 pb-1 bg-[#1d9bf0]">
+                    <button
+                      className="text-white font-[600] rounded-full pl-6 pr-6 pt-1 pb-1 bg-[#1d9bf0]"
+                      onClick={(imgValue) => uploadImageToDb(imgValue)}
+                    >
                       Post
                     </button>
                   </div>
