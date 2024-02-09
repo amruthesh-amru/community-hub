@@ -5,29 +5,59 @@ import { v4 } from "uuid";
 import { doc, setDoc } from "firebase/firestore";
 
 function Home() {
-  const [tweetImageUrl, settweetImageUrl] = useState("");
+  const [tweetTxt, setTweetTxt] = useState("");
+  const [imgPreview, setImgPreview] = useState("");
   const uid = localStorage.getItem("uid");
   let imgValue;
+  const handleTweetTxt = (e) => {
+    setTweetTxt(e.target.value);
+  };
+  //imgValue is the file/image that has been selected to post the tweet
   const handletweetImageUpload = (e) => {
     imgValue = e.target.files[0];
-    console.log(imgValue);
+    console.log(imgValue, "imgValue🧀🧀");
+    // if (imgValue) {
+    //   const reader = new FileReader();
+    //   reader.onload = function (event) {
+    //     const imgPreview = document.getElementById("image-preview");
+    //     imgPreview.src = event.target.result;
+    //     imgPreview.style.display = "block";
+    //   };
+    //   reader.readAsDataURL(imgValue);
+    // }
+    const imgUrl = URL.createObjectURL(imgValue);
+    setImgPreview(imgUrl);
+  };
+  // the below function ensures that the imgValue is not empty
+  const handlePostClickButton = (imgValue) => {
+    if (imgValue) {
+      console.log(imgValue);
+      uploadImageToDb(imgValue);
+    }
   };
   const uploadImageToDb = (imgValue) => {
+    console.log(imgValue, "❤️❤️❤️");
     const imgs = ref(imgDB, `tweetImages/${v4()}`);
     uploadBytes(imgs, imgValue).then((data) => {
       console.log(data, "imgs");
       getDownloadURL(data.ref).then((val) => {
         console.log(val);
-        settweetImageUrl(val);
-        const docRef = doc(db, "tweets", uid);
+        const date = new Date();
+        const uploadDateandTime = date.toISOString();
+        const docRef = doc(db, "tweets", v4());
         const result = setDoc(
           docRef,
           {
             tweeImgUrl: val,
-            tweetTxt: "testing",
+            tweetTxt: tweetTxt,
+            uid: uid,
+            uploadDateandTime: uploadDateandTime,
           },
           { merge: true }
         );
+        setImgPreview("");
+        setTweetTxt("");
+        imgValue = null;
       });
     });
   };
@@ -206,10 +236,7 @@ function Home() {
           <div className="w-[50%] ">
             <div className="w-full border border-[rgba(239,243,244,1.00)] p-3 flex gap-3">
               <div className="w-[40px] h-[40px] bg-red-200 rounded-full">
-                <img
-                  src="https://firebasestorage.googleapis.com/v0/b/community-hub-auth.appspot.com/o/tweetImages%2F40164b4e-67bc-4832-bb79-a27b8d6ecf94?alt=media&token=4047b773-375b-4c79-a628-e8a3265a3a96"
-                  alt=""
-                />
+                <img src="" alt="" />
               </div>
               <div className="w-full ">
                 <form action="">
@@ -218,7 +245,16 @@ function Home() {
                     placeholder="What's happening?"
                     maxLength={280} // You can adjust the maximum character limit as needed
                     rows={4} // You can adjust the number of rows to display
+                    onChange={handleTweetTxt}
+                    value={tweetTxt}
                   />
+                  {imgPreview && (
+                    <img
+                      src={imgPreview}
+                      alt="Image Preview"
+                      className="w-full max-h-80 object-cover rounded-lg"
+                    />
+                  )}
                 </form>
                 <div className="p-3 flex justify-between items-center border-t border-[rgba(239,243,244,1.00)]">
                   <label>
@@ -235,8 +271,12 @@ function Home() {
                   </label>
                   <div>
                     <button
+                      type="button"
                       className="text-white font-[600] rounded-full pl-6 pr-6 pt-1 pb-1 bg-[#1d9bf0]"
-                      onClick={(imgValue) => uploadImageToDb(imgValue)}
+                      // onClick={(imgValue) => uploadImageToDb(imgValue)}
+                      onClick={(imgValue) => {
+                        handlePostClickButton(imgValue);
+                      }}
                     >
                       Post
                     </button>
