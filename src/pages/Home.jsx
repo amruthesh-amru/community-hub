@@ -1,232 +1,182 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import TweetBox from "../components/TweetBox";
 import { db, imgDB } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  QuerySnapshot,
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+  setDoc,
+} from "firebase/firestore";
 
 function Home() {
+  let [fetchedTweets, setFetchedTweets] = useState([]);
   const [tweetTxt, setTweetTxt] = useState("");
   const [imgPreview, setImgPreview] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const uid = localStorage.getItem("uid");
-  let imgValue;
+
   const handleTweetTxt = (e) => {
     setTweetTxt(e.target.value);
   };
-  //imgValue is the file/image that has been selected to post the tweet
+  //selectedImage is the file/image that has been selected to post the tweet
   const handletweetImageUpload = (e) => {
-    imgValue = e.target.files[0];
-    console.log(imgValue, "imgValue🧀🧀");
-    // if (imgValue) {
-    //   const reader = new FileReader();
-    //   reader.onload = function (event) {
-    //     const imgPreview = document.getElementById("image-preview");
-    //     imgPreview.src = event.target.result;
-    //     imgPreview.style.display = "block";
-    //   };
-    //   reader.readAsDataURL(imgValue);
-    // }
-    const imgUrl = URL.createObjectURL(imgValue);
+    let tempImg = e.target.files[0];
+    console.log(tempImg, "tempImg🧀🧀");
+    setSelectedImage(tempImg);
+    const imgUrl = URL.createObjectURL(tempImg);
     setImgPreview(imgUrl);
   };
-  // the below function ensures that the imgValue is not empty
-  const handlePostClickButton = (imgValue) => {
-    if (imgValue) {
-      console.log(imgValue);
-      uploadImageToDb(imgValue);
-    }
-  };
-  const uploadImageToDb = (imgValue) => {
-    console.log(imgValue, "❤️❤️❤️");
+
+  const uploadImageToDb = async () => {
+    console.log(selectedImage, "❤️❤️❤️");
     const imgs = ref(imgDB, `tweetImages/${v4()}`);
-    uploadBytes(imgs, imgValue).then((data) => {
-      console.log(data, "imgs");
-      getDownloadURL(data.ref).then((val) => {
-        console.log(val);
-        const date = new Date();
-        const uploadDateandTime = date.toISOString();
-        const docRef = doc(db, "tweets", v4());
-        const result = setDoc(
-          docRef,
-          {
-            tweeImgUrl: val,
-            tweetTxt: tweetTxt,
-            uid: uid,
-            uploadDateandTime: uploadDateandTime,
-          },
-          { merge: true }
-        );
-        setImgPreview("");
-        setTweetTxt("");
-        imgValue = null;
-      });
-    });
+    let uploadResponse;
+    let uploadedResponse;
+    if (selectedImage) {
+      uploadResponse = await uploadBytes(imgs, selectedImage);
+      uploadedResponse = await getDownloadURL(uploadResponse.ref);
+    }
+    const docRef = doc(db, "tweets", v4());
+    const uploadDateandTime = new Date().toISOString();
+    const response = await setDoc(
+      docRef,
+      {
+        tweeImgUrl: uploadedResponse ? uploadedResponse : null,
+        tweetTxt: tweetTxt,
+        uid: uid,
+        uploadDateandTime: uploadDateandTime,
+      },
+      { merge: true }
+    );
+    console.log("res", response);
+    setImgPreview("");
+    setTweetTxt("");
+    setSelectedImage(null);
+    // if(selectedImage){
+    //   uploadBytes(imgs, selectedImage ? selectedImage : null).then((data) => {
+    //     console.log(data, "imgs");
+    //     getDownloadURL(data.ref).then((val) => {
+    //       console.log(val);
+    //       const date = new Date();
+    //       const uploadDateandTime = date.toISOString();
+    //       const docRef = doc(db, "tweets", v4());
+    //       const result = setDoc(
+    //         docRef,
+    //         {
+    //           tweeImgUrl: val ? val : null,
+    //           tweetTxt: tweetTxt,
+    //           uid: uid,
+    //           uploadDateandTime: uploadDateandTime,
+    //         },
+    //         { merge: true }
+    //       );
+    //       setImgPreview("");
+    //       setTweetTxt("");
+    //       setSelectedImage(null);
+    //     });
+    //   });
+    // }
   };
+  // const fetchTweet = async () => {
+  useEffect(() => {
+    const q = query(collection(db, "tweets"));
+    const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
+      const documents = [];
+      QuerySnapshot.forEach((doc) => {
+        documents.push({ ...doc.data(), id: doc.id });
+      });
+      setFetchedTweets(documents);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  //fetch username and userId using UID
+
+  //   const querySnapshot = await getDocs(collection(db, "tweets"));
+  //   const documents = [];
+
+  //   querySnapshot.forEach((doc) => {
+  //     // Each doc.data() is a document from the collection
+  //     documents.push({ id: doc.id, ...doc.data() });
+  //   });
+  //   return documents;
+  // } catch (e) {
+  //   console.error("Error fetching documents: ", e);
+  //   return [];
+  // }
+  // };
+  // useEffect(() => {
+  //   fetchTweet()
+  //     .then((documents) => {
+  //       setFetchedTweets(documents);
+  //       console.log("Fetched documents: ", documents);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching documents: ", error);
+  //     });
+  // }, []);
+
   return (
     <>
-      {/* <div className="min-h-screen w-full">
-        <div className="flex flex-col items-center h-full w-60  overflow-hidden text-white bg-black rounded">
-          <a className="flex items-center w-full px-5 mt-3" href="#">
-            <i className="fa-solid fa-user-graduate"></i>
-            <span className="ml-2 text-sm font-bold">Community Hub</span>
-          </a>
-          <div className="w-full px-2">
-            <div className="flex flex-col items-center w-full mt-3 border-t border-gray-700">
-              <a
-                className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
-                href="#"
-              >
-                <i className="fa-solid fa-heart"></i>
-                <span className="ml-2 text-sm font-medium">For You</span>
-              </a>
-              <a
-                className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
-                href="#"
-              >
-                <i className="fa-solid fa-brain"></i>
-                <span className="ml-2 text-sm font-medium">
-                  Classroom Collab
-                </span>
-              </a>
-              <a
-                className="flex items-center w-full h-12 px-3 mt-2 text-gray-200 bg-gray-700 rounded"
-                href="#"
-              >
-                <i className="fa-solid fa-book"></i>
-                <span className="ml-2 text-sm font-medium">
-                  Acadamic Updates
-                </span>
-              </a>
-              <a
-                className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
-                href="#"
-              >
-                <i className="fa-solid fa-magnifying-glass"></i>
-                <span className="ml-2 text-sm font-medium">Lost And Found</span>
-              </a>
-              <a
-                className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
-                href="#"
-              >
-                <i className="fa-solid fa-briefcase"></i>
-                <span className="ml-2 text-sm font-medium">
-                  Job And Internship
-                </span>
-              </a>
-              <a
-                className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
-                href="#"
-              >
-                <i className="fa-solid fa-person-running"></i>
-                <span className="ml-2 text-sm font-medium">Bunk Mate</span>
-              </a>
-              <a
-                className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
-                href="#"
-              >
-                <i className="fa-solid fa-tower-broadcast"></i>
-                <span className="ml-2 text-sm font-medium">
-                  Emergency Alerts
-                </span>
-              </a>
-            </div>
-            <div className="flex flex-col items-center w-full mt-2 border-t border-gray-700">
-              <a
-                className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
-                href="#"
-              >
-                <svg
-                  className="w-6 h-6 stroke-current"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-                <span className="ml-2 text-sm font-medium">Products</span>
-              </a>
-            </div>
-          </div>
-          <a
-            className="flex items-center justify-center w-full h-16 mt-auto bg-gray-800 hover:bg-gray-700 hover:text-gray-300 "
-            href="#"
-          >
-            <svg
-              className="w-6 h-6 stroke-current"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span className="ml-2 text-sm font-medium">Account</span>
-          </a>
-        </div>
-      </div> */}
       <div>
         <div className="w-[85%] mx-auto my-0 p-4 flex">
-          <div className="w-[22%]">
+          <div className="w-[22%] flex ">
             <ul className="flex flex-col gap-8 text-[1.5rem] text-[#0f1419] font-[200] w-full">
-              <li>
+              <li className="flex items-center justify-start">
                 <i className="fa-solid fa-user-graduate"></i>
-                <span className="pl-4 text-[20px]  ml-2 text-sm font-bold">
+                <span className="pl-4 text-[20px]  ml-2 text-sm font-bold uppercase">
                   Community Hub
                 </span>
               </li>
-              <li>
+              <li className="flex items-center justify-start">
                 <i className="fa-solid fa-heart"></i>
                 <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
                   For You
                 </span>
               </li>
-              <li>
+              <li className="flex items-center justify-start">
                 <i className="fa-solid fa-brain"></i>
                 <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
                   Classroom Collab
                 </span>
               </li>
-              <li>
+              <li className="flex items-center justify-start">
                 <i className="fa-solid fa-book"></i>
                 <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
                   Acadamic Updates
                 </span>
               </li>
-              <li>
+              <li className="flex items-center justify-start">
                 <i className="fa-solid fa-magnifying-glass"></i>
                 <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
                   Lost And Found
                 </span>
               </li>
-              <li>
+              <li className="flex items-center justify-start">
                 <i className="fa-solid fa-briefcase"></i>
                 <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
                   Job And Internship
                 </span>
               </li>
-              <li>
+              <li className="flex items-center justify-start">
                 <i className="fa-solid fa-person-running"></i>
                 <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
                   Bunk Mate
                 </span>
               </li>
-              <li>
+              <li className="flex items-center justify-start">
                 <i className="fa-solid fa-tower-broadcast"></i>
                 <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
                   Emergency Alerts
                 </span>
               </li>
-              <li>
+              <li className="flex items-center justify-start">
                 <button className="pl-[32px] pt-2 pb-2 text-center text-white font-[600] bg-[#1d9bf0] pr-[32px] w-full rounded-full">
                   Post
                 </button>
@@ -273,9 +223,9 @@ function Home() {
                     <button
                       type="button"
                       className="text-white font-[600] rounded-full pl-6 pr-6 pt-1 pb-1 bg-[#1d9bf0]"
-                      // onClick={(imgValue) => uploadImageToDb(imgValue)}
-                      onClick={(imgValue) => {
-                        handlePostClickButton(imgValue);
+                      // onClick={(selectedImage) => uploadImageToDb(selectedImage)}
+                      onClick={() => {
+                        uploadImageToDb();
                       }}
                     >
                       Post
@@ -284,6 +234,15 @@ function Home() {
                 </div>
               </div>
             </div>
+            {fetchedTweets.map((fetchedTweet) => {
+              return (
+                <TweetBox
+                  key={fetchedTweet.id}
+                  tweetImg={fetchedTweet.tweeImgUrl}
+                  tweetTxt={fetchedTweet.tweetTxt}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
