@@ -22,6 +22,8 @@ const Login = () => {
       const response = await signInWithEmailAndPassword(auth, email, password);
       alert("Account successfully Logged In");
       console.log(response);
+      localStorage.setItem("uid", response.user.uid);
+
       navigate("/");
     } catch (error) {
       alert(error);

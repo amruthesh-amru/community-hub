@@ -7,10 +7,12 @@ import {
   QuerySnapshot,
   collection,
   doc,
+  getDoc,
   getDocs,
   onSnapshot,
   query,
   setDoc,
+  where,
 } from "firebase/firestore";
 
 function Home() {
@@ -18,12 +20,32 @@ function Home() {
   const [tweetTxt, setTweetTxt] = useState("");
   const [imgPreview, setImgPreview] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
+  const [fetchedUserDetails, setfetchedUserDetails] = useState(null);
 
   const uid = localStorage.getItem("uid");
-
+  console.log(uid);
   const handleTweetTxt = (e) => {
     setTweetTxt(e.target.value);
   };
+  //get user details to know who is posting the tweet
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const userRef = doc(db, "user details", uid);
+        const response = await getDoc(userRef);
+        if (response.exists) {
+          setfetchedUserDetails(response.data());
+          console.log(response.data());
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+    fetchUserDetails();
+  }, [uid]);
+
   //selectedImage is the file/image that has been selected to post the tweet
   const handletweetImageUpload = (e) => {
     let tempImg = e.target.files[0];
@@ -50,6 +72,11 @@ function Home() {
         tweeImgUrl: uploadedResponse ? uploadedResponse : null,
         tweetTxt: tweetTxt,
         uid: uid,
+        name: fetchedUserDetails.name ? fetchedUserDetails.name : null,
+        username: fetchedUserDetails.username
+          ? fetchedUserDetails.username
+          : null,
+        userImage: null,
         uploadDateandTime: uploadDateandTime,
       },
       { merge: true }
@@ -58,30 +85,6 @@ function Home() {
     setImgPreview("");
     setTweetTxt("");
     setSelectedImage(null);
-    // if(selectedImage){
-    //   uploadBytes(imgs, selectedImage ? selectedImage : null).then((data) => {
-    //     console.log(data, "imgs");
-    //     getDownloadURL(data.ref).then((val) => {
-    //       console.log(val);
-    //       const date = new Date();
-    //       const uploadDateandTime = date.toISOString();
-    //       const docRef = doc(db, "tweets", v4());
-    //       const result = setDoc(
-    //         docRef,
-    //         {
-    //           tweeImgUrl: val ? val : null,
-    //           tweetTxt: tweetTxt,
-    //           uid: uid,
-    //           uploadDateandTime: uploadDateandTime,
-    //         },
-    //         { merge: true }
-    //       );
-    //       setImgPreview("");
-    //       setTweetTxt("");
-    //       setSelectedImage(null);
-    //     });
-    //   });
-    // }
   };
   // const fetchTweet = async () => {
   useEffect(() => {
@@ -185,7 +188,7 @@ function Home() {
           </div>
           <div className="w-[50%] ">
             <div className="w-full border border-[rgba(239,243,244,1.00)] p-3 flex gap-3">
-              <div className="w-[40px] h-[40px] bg-red-200 rounded-full">
+              <div className="w-[40px] h-[40px] bg-red-200 rounded-full flex items-center justify-center">
                 <img src="" alt="" />
               </div>
               <div className="w-full ">
@@ -223,7 +226,6 @@ function Home() {
                     <button
                       type="button"
                       className="text-white font-[600] rounded-full pl-6 pr-6 pt-1 pb-1 bg-[#1d9bf0]"
-                      // onClick={(selectedImage) => uploadImageToDb(selectedImage)}
                       onClick={() => {
                         uploadImageToDb();
                       }}
@@ -240,6 +242,8 @@ function Home() {
                   key={fetchedTweet.id}
                   tweetImg={fetchedTweet.tweeImgUrl}
                   tweetTxt={fetchedTweet.tweetTxt}
+                  name={fetchedTweet.name}
+                  username={fetchedTweet.username}
                 />
               );
             })}

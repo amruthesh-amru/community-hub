@@ -62,7 +62,6 @@ const SignUp = () => {
         setEmail(credentials.user.email);
         setUid(credentials.user.uid);
         //saving uid in loacal storage
-        localStorage.setItem("uid", credentials.user.uid);
         console.log("UID:", credentials.user.uid);
         const docRef = doc(db, "user details", credentials.user.uid);
         const result = setDoc(
