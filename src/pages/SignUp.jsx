@@ -61,6 +61,7 @@ const SignUp = () => {
         setToken(credentials.user.accessToken);
         setEmail(credentials.user.email);
         setUid(credentials.user.uid);
+        localStorage.setItem("uid", credentials.user.uid);
         //saving uid in loacal storage
         console.log("UID:", credentials.user.uid);
         const docRef = doc(db, "user details", credentials.user.uid);
@@ -76,7 +77,7 @@ const SignUp = () => {
           },
           { merge: true }
         );
-        navigate("/login");
+        navigate("/addProfilePicture");
       })
       .catch((error) => {
         // Handle error if createUserWithEmailAndPassword fails

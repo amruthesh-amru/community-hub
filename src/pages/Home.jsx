@@ -14,6 +14,7 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
+import TweetsContainer from "./TweetsContainer";
 
 function Home() {
   let [fetchedTweets, setFetchedTweets] = useState([]);
@@ -34,11 +35,6 @@ function Home() {
       const response = await getDoc(userRef);
       const userdetails = response.data();
       if (response.exists) {
-        // setfetchedUserDetails(userdetails);
-        // setTweetPosterName((prev) => +"");
-        // setTweetPosterUserName((prev) => +"");
-        // setTweetPosterName(response.data().name);
-        // setTweetPosterUserName(response.data().username);
         console.log(response.data().name, "user details🐕‍🦺🐕‍🦺");
         return userdetails;
       } else {
@@ -69,7 +65,7 @@ function Home() {
       uploadResponse = await uploadBytes(imgs, selectedImage);
       uploadedResponse = await getDownloadURL(uploadResponse.ref);
     }
-    const docRef = doc(db, "tweets", v4());
+    const docRef = doc(db, "academicTweets", v4());
     const uploadDateandTime = new Date().toISOString();
     const response = await setDoc(
       docRef,
@@ -91,7 +87,7 @@ function Home() {
   };
   // fetching tweets
   useEffect(() => {
-    const q = query(collection(db, "tweets"));
+    const q = query(collection(db, "academicTweets"));
     const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
       const documents = [];
       QuerySnapshot.forEach((doc) => {
@@ -136,125 +132,64 @@ function Home() {
     <>
       <div>
         <div className="w-[85%] mx-auto my-0 p-4 flex">
-          <div className="w-[22%] flex ">
-            <ul className="flex flex-col gap-8 text-[1.5rem] text-[#0f1419] font-[200] w-full">
+          <div className="w-[22%] flex   ">
+            <ul className="flex flex-col gap-8 text-[1.5rem] text-[#0f1419] font-[200]  fixed ">
               <li className="flex items-center justify-start">
                 <i className="fa-solid fa-user-graduate"></i>
                 <span className="pl-4 text-[20px]  ml-2 text-sm font-bold uppercase">
                   Community Hub
                 </span>
               </li>
-              <li className="flex items-center justify-start">
+              <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3   ">
                 <i className="fa-solid fa-heart"></i>
-                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                <span className="pl-4 text-[1.1rem] ml-2 text-sm font-[400]">
                   For You
                 </span>
               </li>
-              <li className="flex items-center justify-start">
+              <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3 ">
                 <i className="fa-solid fa-brain"></i>
-                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                <span className="pl-4 text-[1.1rem] ml-2 text-sm font-[400]">
                   Classroom Collab
                 </span>
               </li>
-              <li className="flex items-center justify-start">
+              <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3 ">
                 <i className="fa-solid fa-book"></i>
-                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                <span className="pl-4 text-[1.1rem] ml-2 text-sm font-[400]">
                   Acadamic Updates
                 </span>
               </li>
-              <li className="flex items-center justify-start">
+              <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3 ">
                 <i className="fa-solid fa-magnifying-glass"></i>
-                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                <span className="pl-4 text-[1.1rem] ml-2 text-sm font-[400]">
                   Lost And Found
                 </span>
               </li>
-              <li className="flex items-center justify-start">
+              <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3 ">
                 <i className="fa-solid fa-briefcase"></i>
-                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                <span className="pl-4 text-[1.1rem] ml-2 text-sm font-[400]">
                   Job And Internship
                 </span>
               </li>
-              <li className="flex items-center justify-start">
+              <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3 ">
                 <i className="fa-solid fa-person-running"></i>
-                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                <span className="pl-4 text-[1.1rem] ml-2 text-sm font-[400]">
                   Bunk Mate
                 </span>
               </li>
-              <li className="flex items-center justify-start">
+              <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3 ">
                 <i className="fa-solid fa-tower-broadcast"></i>
-                <span className="pl-4 text-[20px] ml-2 text-sm font-[400]">
+                <span className="pl-4 text-[1.1rem] ml-2 text-sm font-[400]">
                   Emergency Alerts
                 </span>
               </li>
               <li className="flex items-center justify-start">
-                <button className="pl-[32px] pt-2 pb-2 text-center text-white font-[600] bg-[#1d9bf0] pr-[32px] w-full rounded-full">
+                <button className="pl-[32px] pt-2 pb-2 text-center text-white font-[600] bg-[#1d9bf0] pr-[32px] rounded-full self-start">
                   Post
                 </button>
               </li>
             </ul>
           </div>
-          <div className="w-[50%] ">
-            <div className="w-full border border-[rgba(239,243,244,1.00)] p-3 flex gap-3">
-              <div className="w-[40px] h-[40px] bg-red-200 rounded-full flex items-center justify-center">
-                <img src="" alt="" />
-              </div>
-              <div className="w-full ">
-                <form action="">
-                  <textarea
-                    className="w-full text-lg resize-none outline-none"
-                    placeholder="What's happening?"
-                    maxLength={280} // You can adjust the maximum character limit as needed
-                    rows={4} // You can adjust the number of rows to display
-                    onChange={handleTweetTxt}
-                    value={tweetTxt}
-                  />
-                  {imgPreview && (
-                    <img
-                      src={imgPreview}
-                      alt="Image Preview"
-                      className="w-full max-h-80 object-cover rounded-lg"
-                    />
-                  )}
-                </form>
-                <div className="p-3 flex justify-between items-center border-t border-[rgba(239,243,244,1.00)]">
-                  <label>
-                    <i className="text-[20px] fa-regular fa-image text-[#1d9bf0]"></i>
-
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,image/JPG"
-                      className="hidden"
-                      onChange={(e) => {
-                        handletweetImageUpload(e);
-                      }}
-                    />
-                  </label>
-                  <div>
-                    <button
-                      type="button"
-                      className="text-white font-[600] rounded-full pl-6 pr-6 pt-1 pb-1 bg-[#1d9bf0]"
-                      onClick={() => {
-                        uploadImageToDb();
-                      }}
-                    >
-                      Post
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {fetchedTweets.map((fetchedTweet) => {
-              return (
-                <TweetBox
-                  key={fetchedTweet.id}
-                  tweetImg={fetchedTweet.tweeImgUrl}
-                  tweetTxt={fetchedTweet.tweetTxt}
-                  name={fetchedTweet.name}
-                  username={fetchedTweet.username}
-                />
-              );
-            })}
-          </div>
+          <TweetsContainer />
         </div>
       </div>
     </>

@@ -3,12 +3,16 @@ import { collection, onSnapshot, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import badge1 from "../assets/badge1.png";
-const tweetBox = ({ tweetTxt, tweetImg, name, username }) => {
+const tweetBox = ({ tweetTxt, tweetImg, name, username, userImage }) => {
   return (
     <>
       <div className="p-3 flex justify-start gap-4 items-start border border-[rgba(239,243,244,1.00)]">
         <div className="w-[40px] h-[40px] flex items-center justify-center bg-red-200 rounded-full">
-          <img src="" alt="" className=" " />
+          <img
+            src={userImage}
+            alt=""
+            className=" w-full h-full object-cover rounded-full"
+          />
         </div>
         <div className="flex flex-col w-full items-start justify-center ">
           <div className="flex items-center justify-center gap-2 mb-1">
