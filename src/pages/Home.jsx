@@ -130,7 +130,7 @@ function Home() {
 
   return (
     <>
-      <div>
+      {/* <div>
         <div className="w-[85%] mx-auto my-0 p-4 flex">
           <div className="w-[22%] flex   ">
             <ul className="flex flex-col gap-8 text-[1.5rem] text-[#0f1419] font-[200]  fixed ">
@@ -191,7 +191,7 @@ function Home() {
           </div>
           <TweetsContainer />
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

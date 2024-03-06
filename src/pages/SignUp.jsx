@@ -69,7 +69,7 @@ const SignUp = () => {
           docRef,
           {
             name: name,
-            usename: userName,
+            username: userName,
             email: email,
             currentYear: currentYear,
             student: isStudent,

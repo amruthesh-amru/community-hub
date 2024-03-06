@@ -29,14 +29,16 @@ function TweetsContainer() {
   // get user details to know who is posting the tweet
   let userdetails;
   let tempProfile;
+
   const fetchUserDetails = async () => {
     try {
+      console.log(uid);
       const userRef = doc(db, "user details", uid);
       const response = await getDoc(userRef);
       userdetails = response.data();
       setProfilePicture(userdetails.userImage);
       tempProfile = userdetails.userImage;
-      console.log(tempProfile);
+
       if (response.exists) {
         console.log(response.data().name, "user details🐕‍🦺🐕‍🦺");
         return userdetails;
@@ -47,6 +49,7 @@ function TweetsContainer() {
       console.error("Error fetching user details:", error);
     }
   };
+  console.log(profilePicture + "🫁🫁");
   useEffect(() => {
     fetchUserDetails();
   }, []);
@@ -107,12 +110,17 @@ function TweetsContainer() {
     });
     return () => unsubscribe();
   }, []);
+
   return (
     <>
       <div className="w-[50%] ">
         <div className="w-full border border-[rgba(239,243,244,1.00)] p-3 flex gap-3">
           <div className="w-[40px] h-[40px] bg-red-200 rounded-full flex items-center justify-center">
-            <img src={tempProfile} alt="" />
+            <img
+              src={profilePicture}
+              alt=""
+              className="h-full w-full rounded-full object-cover"
+            />
           </div>
           <div className="w-full ">
             <form action="">
@@ -132,7 +140,7 @@ function TweetsContainer() {
                 />
               )}
             </form>
-            <div className="p-3 flex justify-between items-center border-t border-[rgba(239,243,244,1.00)]">
+            <div className="p-3  flex justify-between items-center border-t border-[rgba(239,243,244,1.00)]">
               <label>
                 <i className="text-[20px] fa-regular fa-image text-[#1d9bf0]"></i>
 
@@ -145,6 +153,7 @@ function TweetsContainer() {
                   }}
                 />
               </label>
+
               <div>
                 <button
                   type="button"
@@ -152,6 +161,7 @@ function TweetsContainer() {
                   onClick={() => {
                     uploadImageToDb();
                   }}
+                  disabled={tweetTxt || imgPreview ? false : true}
                 >
                   Post
                 </button>
@@ -159,18 +169,20 @@ function TweetsContainer() {
             </div>
           </div>
         </div>
-        {fetchedTweets.map((fetchedTweet) => {
-          return (
-            <TweetBox
-              key={fetchedTweet.id}
-              tweetImg={fetchedTweet.tweeImgUrl}
-              tweetTxt={fetchedTweet.tweetTxt}
-              name={fetchedTweet.name}
-              username={fetchedTweet.username}
-              userImage={fetchedTweet.userImage}
-            />
-          );
-        })}
+        <div className="w-full">
+          {fetchedTweets.map((fetchedTweet) => {
+            return (
+              <TweetBox
+                key={fetchedTweet.id}
+                tweetImg={fetchedTweet.tweeImgUrl}
+                tweetTxt={fetchedTweet.tweetTxt}
+                name={fetchedTweet.name}
+                username={fetchedTweet.username}
+                userImage={fetchedTweet.userImage}
+              />
+            );
+          })}
+        </div>
       </div>
     </>
   );
