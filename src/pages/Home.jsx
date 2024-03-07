@@ -15,6 +15,7 @@ import {
   where,
 } from "firebase/firestore";
 import TweetsContainer from "./TweetsContainer";
+import Leftbar from "../components/Leftbar";
 
 function Home() {
   let [fetchedTweets, setFetchedTweets] = useState([]);
@@ -102,32 +103,6 @@ function Home() {
     return () => unsubscribe();
   }, []);
 
-  //fetch username and userId using UID
-
-  //   const querySnapshot = await getDocs(collection(db, "tweets"));
-  //   const documents = [];
-
-  //   querySnapshot.forEach((doc) => {
-  //     // Each doc.data() is a document from the collection
-  //     documents.push({ id: doc.id, ...doc.data() });
-  //   });
-  //   return documents;
-  // } catch (e) {
-  //   console.error("Error fetching documents: ", e);
-  //   return [];
-  // }
-  // };
-  // useEffect(() => {
-  //   fetchTweet()
-  //     .then((documents) => {
-  //       setFetchedTweets(documents);
-  //       console.log("Fetched documents: ", documents);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching documents: ", error);
-  //     });
-  // }, []);
-
   return (
     <>
       {/* <div>
@@ -192,6 +167,10 @@ function Home() {
           <TweetsContainer />
         </div>
       </div> */}
+      <div className="flex items-start justify-center gap-[5rem] p-3">
+        <Leftbar />
+        {<TweetsContainer />}
+      </div>
     </>
   );
 }

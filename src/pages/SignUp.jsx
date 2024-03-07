@@ -1,6 +1,6 @@
 // SignupPage.js
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { db } from "../firebase";
@@ -18,6 +18,7 @@ import { NavLink } from "react-router-dom";
 
 const SignUp = () => {
   const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -29,6 +30,8 @@ const SignUp = () => {
   const [creds, setCreds] = useState();
   const [token, setToken] = useState("");
   const [uid, setUid] = useState("");
+
+  const [user, setUser] = useState(null);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
