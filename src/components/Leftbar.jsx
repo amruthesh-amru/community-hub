@@ -90,7 +90,7 @@ function Leftbar() {
             <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3 ">
               <i className="fa-solid fa-brain"></i>
               <span className="pl-4 text-[1.1rem] ml-2 text-sm font-[400]">
-                Classroom Collab
+                <NavLink to="/collab">Classroom Collab</NavLink>
               </span>
             </li>
             <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3 ">
@@ -102,7 +102,7 @@ function Leftbar() {
             <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3 ">
               <i className="fa-solid fa-magnifying-glass"></i>
               <span className="pl-4 text-[1.1rem] ml-2 text-sm font-[400]">
-                Lost And Found
+                <NavLink to="/lostandfound">Lost And Found</NavLink>
               </span>
             </li>
             <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3 ">

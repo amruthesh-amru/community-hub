@@ -7,10 +7,13 @@ import Home from "./pages/Home";
 import AddProfilePicture from "./pages/AddProfilePicture";
 import ClassroomCollab from "./pages/ClassroomCollab";
 import Leftbar from "./components/Leftbar";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { auth } from "./firebase";
+import Cse from "./pages/notes/Cse";
+import FirstSem from "./pages/notes/FirstSem";
+import LostAndFound from "./pages/LostAndFound";
 function App() {
   const [user, setUser] = useState(null);
   const [isFetching, setIsFetching] = useState(true);
@@ -46,9 +49,19 @@ function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/collab" element={<ClassroomCollab />} />
+          <Route
+            path="/collab"
+            element={
+              <ProtectedRoute user={user}>
+                <ClassroomCollab />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/leftbar" element={<Leftbar />} />
+          <Route path="collab/cse" element={<Cse />} />
+          <Route path="collab/cse/firstsem" element={<FirstSem />} />
           <Route path="/addProfilePicture" element={<AddProfilePicture />} />
+          <Route path="/lostandfound" element={<LostAndFound />} />
         </Routes>
       </Router>
     </>

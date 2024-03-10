@@ -13,7 +13,8 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
-function TweetsContainer() {
+import Leftbar from "../components/Leftbar";
+function LostAndFound() {
   let [fetchedTweets, setFetchedTweets] = useState([]);
   const [tweetTxt, setTweetTxt] = useState("");
   const [imgPreview, setImgPreview] = useState("");
@@ -69,14 +70,14 @@ function TweetsContainer() {
     userdetails = await fetchUserDetails();
 
     console.log(selectedImage, "❤️❤️❤️");
-    const imgs = ref(imgDB, `tweetImages/${v4()}`);
+    const imgs = ref(imgDB, `lostandfoundimages/${v4()}`);
     let uploadResponse;
     let uploadedResponse;
     if (selectedImage) {
       uploadResponse = await uploadBytes(imgs, selectedImage);
       uploadedResponse = await getDownloadURL(uploadResponse.ref);
     }
-    const docRef = doc(db, "academicTweets", v4());
+    const docRef = doc(db, "lostandfound", v4());
     const response = await setDoc(
       docRef,
       {
@@ -97,7 +98,7 @@ function TweetsContainer() {
   };
   // fetching tweets
   useEffect(() => {
-    const collectionRef = collection(db, "academicTweets");
+    const collectionRef = collection(db, "lostandfound");
     const q = query(collectionRef, orderBy("uploadDateandTime", "desc"));
     const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
       const documents = [];
@@ -112,82 +113,84 @@ function TweetsContainer() {
     });
     return () => unsubscribe();
   }, []);
-
   return (
     <>
-      <div className="w-[50%] ">
-        <div className="w-full border border-[rgba(239,243,244,1.00)] p-3 flex gap-3">
-          <div className="w-[40px] h-[40px] bg-red-200 rounded-full flex items-center justify-center">
-            <img
-              src={profilePicture}
-              alt=""
-              className="h-full w-full rounded-full object-cover"
-            />
-          </div>
-          <div className="w-full ">
-            <form action="">
-              <textarea
-                className="w-full text-lg resize-none outline-none"
-                placeholder="What's happening?"
-                maxLength={280}
-                rows={4}
-                onChange={handleTweetTxt}
-                value={tweetTxt}
+      <div className="flex items-start justify-center  p-3">
+        <Leftbar />
+        <div className="w-[50%] ">
+          <div className="w-full border border-[rgba(239,243,244,1.00)] p-3 flex gap-3">
+            <div className="w-[40px] h-[40px] bg-red-200 rounded-full flex items-center justify-center">
+              <img
+                src={profilePicture}
+                alt=""
+                className="h-full w-full rounded-full object-cover"
               />
-              {imgPreview && (
-                <img
-                  src={imgPreview}
-                  alt="Image Preview"
-                  className="w-full max-h-80 object-cover rounded-lg"
+            </div>
+            <div className="w-full ">
+              <form action="">
+                <textarea
+                  className="w-full text-lg resize-none outline-none"
+                  placeholder="What's happening?"
+                  maxLength={280}
+                  rows={4}
+                  onChange={handleTweetTxt}
+                  value={tweetTxt}
                 />
-              )}
-            </form>
-            <div className="p-3  flex justify-between items-center border-t border-[rgba(239,243,244,1.00)]">
-              <label>
-                <i className="text-[20px] fa-regular fa-image text-[#1d9bf0]"></i>
+                {imgPreview && (
+                  <img
+                    src={imgPreview}
+                    alt="Image Preview"
+                    className="w-full max-h-80 object-cover rounded-lg"
+                  />
+                )}
+              </form>
+              <div className="p-3  flex justify-between items-center border-t border-[rgba(239,243,244,1.00)]">
+                <label>
+                  <i className="text-[20px] fa-regular fa-image text-[#1d9bf0]"></i>
 
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,image/JPG"
-                  className="hidden"
-                  onChange={(e) => {
-                    handletweetImageUpload(e);
-                  }}
-                />
-              </label>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,image/JPG"
+                    className="hidden"
+                    onChange={(e) => {
+                      handletweetImageUpload(e);
+                    }}
+                  />
+                </label>
 
-              <div>
-                <button
-                  type="button"
-                  className="text-white font-[600] rounded-full pl-6 pr-6 pt-1 pb-1 bg-[#1d9bf0]"
-                  onClick={() => {
-                    uploadImageToDb();
-                  }}
-                  disabled={tweetTxt || imgPreview ? false : true}
-                >
-                  Post
-                </button>
+                <div>
+                  <button
+                    type="button"
+                    className="text-white font-[600] rounded-full pl-6 pr-6 pt-1 pb-1 bg-[#1d9bf0]"
+                    onClick={() => {
+                      uploadImageToDb();
+                    }}
+                    disabled={tweetTxt || imgPreview ? false : true}
+                  >
+                    Post
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="w-full">
-          {fetchedTweets.map((fetchedTweet) => {
-            return (
-              <TweetBox
-                key={fetchedTweet.id}
-                tweetImg={fetchedTweet.tweeImgUrl}
-                tweetTxt={fetchedTweet.tweetTxt}
-                name={fetchedTweet.name}
-                username={fetchedTweet.username}
-                userImage={fetchedTweet.userImage}
-              />
-            );
-          })}
+          <div className="w-full">
+            {fetchedTweets.map((fetchedTweet) => {
+              return (
+                <TweetBox
+                  key={fetchedTweet.id}
+                  tweetImg={fetchedTweet.tweeImgUrl}
+                  tweetTxt={fetchedTweet.tweetTxt}
+                  name={fetchedTweet.name}
+                  username={fetchedTweet.username}
+                  userImage={fetchedTweet.userImage}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </>
   );
 }
 
-export default TweetsContainer;
+export default LostAndFound;

@@ -1,107 +1,91 @@
-import { useEffect, useState } from "react";
-import TweetBox from "../components/TweetBox";
-import { db, imgDB } from "../firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
-import {
-  QuerySnapshot,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
 import TweetsContainer from "./TweetsContainer";
 import Leftbar from "../components/Leftbar";
 
 function Home() {
-  let [fetchedTweets, setFetchedTweets] = useState([]);
-  const [tweetTxt, setTweetTxt] = useState("");
-  const [imgPreview, setImgPreview] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
+  // let [fetchedTweets, setFetchedTweets] = useState([]);
+  // const [tweetTxt, setTweetTxt] = useState("");
+  // const [imgPreview, setImgPreview] = useState("");
+  // const [selectedImage, setSelectedImage] = useState(null);
 
-  const uid = localStorage.getItem("uid");
-  const handleTweetTxt = (e) => {
-    setTweetTxt(e.target.value);
-  };
+  // const uid = localStorage.getItem("uid");
+  // const handleTweetTxt = (e) => {
+  //   setTweetTxt(e.target.value);
+  // };
 
-  // get user details to know who is posting the tweet
+  // // get user details to know who is posting the tweet
 
-  const fetchUserDetails = async () => {
-    try {
-      const userRef = doc(db, "user details", uid);
-      const response = await getDoc(userRef);
-      const userdetails = response.data();
-      if (response.exists) {
-        console.log(response.data().name, "user details🐕‍🦺🐕‍🦺");
-        return userdetails;
-      } else {
-        console.log("No such document!");
-      }
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
-  };
+  // const fetchUserDetails = async () => {
+  //   try {
+  //     const userRef = doc(db, "user details", uid);
+  //     const response = await getDoc(userRef);
+  //     const userdetails = response.data();
+  //     if (response.exists) {
+  //       console.log(response.data().name, "user details🐕‍🦺🐕‍🦺");
+  //       return userdetails;
+  //     } else {
+  //       console.log("No such document!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching user details:", error);
+  //   }
+  // };
 
-  //selectedImage is the file/image that has been selected to post the tweet
-  const handletweetImageUpload = (e) => {
-    let tempImg = e.target.files[0];
-    console.log(tempImg, "tempImg🧀🧀");
-    setSelectedImage(tempImg);
-    const imgUrl = URL.createObjectURL(tempImg);
-    setImgPreview(imgUrl);
-  };
+  // //selectedImage is the file/image that has been selected to post the tweet
+  // const handletweetImageUpload = (e) => {
+  //   let tempImg = e.target.files[0];
+  //   console.log(tempImg, "tempImg🧀🧀");
+  //   setSelectedImage(tempImg);
+  //   const imgUrl = URL.createObjectURL(tempImg);
+  //   setImgPreview(imgUrl);
+  // };
 
-  const uploadImageToDb = async () => {
-    const userdetails = await fetchUserDetails();
+  // const uploadImageToDb = async () => {
+  //   const userdetails = await fetchUserDetails();
 
-    console.log(selectedImage, "❤️❤️❤️");
-    const imgs = ref(imgDB, `tweetImages/${v4()}`);
-    let uploadResponse;
-    let uploadedResponse;
-    if (selectedImage) {
-      uploadResponse = await uploadBytes(imgs, selectedImage);
-      uploadedResponse = await getDownloadURL(uploadResponse.ref);
-    }
-    const docRef = doc(db, "academicTweets", v4());
-    const uploadDateandTime = new Date().toISOString();
-    const response = await setDoc(
-      docRef,
-      {
-        tweeImgUrl: uploadedResponse ? uploadedResponse : null,
-        tweetTxt: tweetTxt,
-        uid: uid,
-        name: userdetails.name ? userdetails.name : null,
-        username: userdetails.username ? userdetails.username : null,
-        userImage: null,
-        uploadDateandTime: uploadDateandTime,
-      },
-      { merge: true }
-    );
-    console.log("res", response);
-    setImgPreview("");
-    setTweetTxt("");
-    setSelectedImage(null);
-  };
-  // fetching tweets
-  useEffect(() => {
-    const q = query(collection(db, "academicTweets"));
-    const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
-      const documents = [];
-      QuerySnapshot.forEach((doc) => {
-        documents.push({
-          ...doc.data(),
-          id: doc.id,
-        });
-      });
-      setFetchedTweets(documents);
-      console.log(documents, "fetched tweets👌👌");
-    });
-    return () => unsubscribe();
-  }, []);
+  //   console.log(selectedImage, "❤️❤️❤️");
+  //   const imgs = ref(imgDB, `tweetImages/${v4()}`);
+  //   let uploadResponse;
+  //   let uploadedResponse;
+  //   if (selectedImage) {
+  //     uploadResponse = await uploadBytes(imgs, selectedImage);
+  //     uploadedResponse = await getDownloadURL(uploadResponse.ref);
+  //   }
+  //   const docRef = doc(db, "academicTweets", v4());
+  //   const uploadDateandTime = Timestamp();
+  //   const response = await setDoc(
+  //     docRef,
+  //     {
+  //       tweeImgUrl: uploadedResponse ? uploadedResponse : null,
+  //       tweetTxt: tweetTxt,
+  //       uid: uid,
+  //       name: userdetails.name ? userdetails.name : null,
+  //       username: userdetails.username ? userdetails.username : null,
+  //       userImage: null,
+  //       uploadDateandTime: uploadDateandTime,
+  //     },
+  //     { merge: true }
+  //   );
+  //   console.log("res", response);
+  //   setImgPreview("");
+  //   setTweetTxt("");
+  //   setSelectedImage(null);
+  // };
+  // // fetching tweets
+  // useEffect(() => {
+  //   const q = query(collection(db, "academicTweets"));
+  //   const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
+  //     const documents = [];
+  //     QuerySnapshot.forEach((doc) => {
+  //       documents.push({
+  //         ...doc.data(),
+  //         id: doc.id,
+  //       });
+  //     });
+  //     setFetchedTweets(documents);
+  //     console.log(documents, "fetched tweets👌👌");
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
 
   return (
     <>
