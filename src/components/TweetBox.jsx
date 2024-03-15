@@ -3,7 +3,15 @@ import { collection, onSnapshot, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import badge1 from "../assets/badge1.png";
+import ShowImage from "./ShowImage";
 const tweetBox = ({ tweetTxt, tweetImg, name, username, userImage }) => {
+  const [showImage, setShowImage] = useState(false);
+  const handleImageClick = () => {
+    setShowImage(!showImage);
+  };
+  const handleCloseImage = () => {
+    setShowImage(false);
+  };
   return (
     <>
       <div className="p-3 flex justify-start gap-4 items-start border border-[rgba(239,243,244,1.00)]">
@@ -27,9 +35,17 @@ const tweetBox = ({ tweetTxt, tweetImg, name, username, userImage }) => {
           <div className=" text-[15px] text-[#0f1419]  font-[400]">
             {tweetTxt}
           </div>
-          <div>
+          <div className="w-full">
             {tweetImg && (
-              <img src={tweetImg} alt="" className="rounded-2xl mt-2" />
+              <img
+                src={tweetImg}
+                alt=""
+                className="rounded-2xl mt-2 w-[50%] h-[30rem] object-cover"
+                onClick={handleImageClick}
+              />
+            )}
+            {showImage && (
+              <ShowImage imgUrl={tweetImg} onClose={handleCloseImage} />
             )}
           </div>
         </div>

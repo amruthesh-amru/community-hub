@@ -108,7 +108,7 @@ function Leftbar() {
             <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3 ">
               <i className="fa-solid fa-briefcase"></i>
               <span className="pl-4 text-[1.1rem] ml-2 text-sm font-[400]">
-                Job And Internship
+                <NavLink to="/jobandinternship">Job And Internship</NavLink>
               </span>
             </li>
             <li className="flex items-center justify-start p-2 hover:bg-[#e7e7e8] rounded-full pr-3 transition-colors pl-3 ">
