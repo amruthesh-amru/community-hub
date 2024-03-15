@@ -106,12 +106,18 @@ function Bunkmate() {
       <div className="flex items-start justify-center gap-[5rem] p-3">
         <Leftbar />
         <div>
-          <button onClick={() => setToggleModal(!toggleModal)}>
-            Add Subject
-          </button>
-          <button>Delete Subject</button>
-          <button></button>
-          <section className="bg-white dark:bg-dark py-20 lg:py-[120px]">
+          <div className="flex items-center justify-start gap-10 pt-10">
+            <button
+              className=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              onClick={() => setToggleModal(!toggleModal)}
+            >
+              Add Subject
+            </button>
+            <button className=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              Delete Subject
+            </button>
+          </div>
+          <section className="bg-white dark:bg-dark py-10 lg:pb-[120px]">
             <div className="container">
               <div className="flex flex-wrap -mx-4">
                 <div className="w-full ">
@@ -120,27 +126,22 @@ function Bunkmate() {
                       <thead className="text-center bg-primary ">
                         <tr className="bg-[#3758f9]">
                           <th className="w-1/6 min-w-[160px] text-white border-l border-transparent py-4 px-3 text-lg font-medium  lg:py-7 lg:px-4">
-                            {" "}
-                            Subjects{" "}
+                            Subjects
                           </th>
                           <th className="w-1/6 min-w-[160px] text-white border-l border-transparent py-4 px-3 text-lg font-medium  lg:py-7 lg:px-4">
-                            {" "}
                             Attended Today ?
                           </th>
                           <th className="w-1/6 min-w-[160px] text-white border-l border-transparent py-4 px-3 text-lg font-medium  lg:py-7 lg:px-4">
                             No. of classes attended
                           </th>
                           <th className="w-1/6 min-w-[160px] text-white border-l border-transparent py-4 px-3 text-lg font-medium  lg:py-7 lg:px-4">
-                            {" "}
-                            Total no. of classes{" "}
+                            Total no. of classes
                           </th>
                           <th className="w-1/6 min-w-[160px] text-white border-l border-transparent py-4 px-3 text-lg font-medium  lg:py-7 lg:px-4">
-                            {" "}
-                            Attendence percentage{" "}
+                            Attendence percentage
                           </th>
                           <th className="w-1/6 min-w-[160px] text-white border-l border-transparent py-4 px-3 text-lg font-medium  lg:py-7 lg:px-4">
-                            {" "}
-                            Register{" "}
+                            Register
                           </th>
                         </tr>
                       </thead>
