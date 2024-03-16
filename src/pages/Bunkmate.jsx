@@ -20,9 +20,9 @@ import {
 function Bunkmate() {
   const [documents, setDocuments] = useState([]);
   const [toggleModal, setToggleModal] = useState(false);
-  const [subjectName, setSubjectName] = useState(null);
-  const [Totalclasses, setTotalClasses] = useState(0);
-  const [attendedClasses, setAttendedClasses] = useState(0);
+  const [subjectName, setSubjectName] = useState("");
+  const [Totalclasses, setTotalClasses] = useState();
+  const [attendedClasses, setAttendedClasses] = useState();
   useEffect(() => {
     const fetchSubjectInfo = async () => {
       try {
@@ -82,20 +82,26 @@ function Bunkmate() {
     try {
       const subRef = doc(db, "bunkmate", uid, "subjects", subjectId);
       await setDoc(subRef, {
-        totalclasses: Totalclasses,
-
-        classesattended: attendedClasses,
+        totalclasses: +Totalclasses,
+        classesattended: +attendedClasses,
       });
+      setSubjectName("");
+      setToggleModal(!toggleModal);
     } catch (error) {
       console.error("Error updating subject:", error);
     }
   };
   const handleDeleteSubject = async (subjectId) => {
     const uid = localStorage.getItem("uid");
+    const result = confirm("Are You Sure You Want To Delete", subjectId, " ?");
     try {
-      const subRef = doc(db, "bunkmate", uid, "subjects", subjectId);
-      await deleteDoc(subRef);
-      console.log("Document successfully deleted!");
+      if (result) {
+        const subRef = doc(db, "bunkmate", uid, "subjects", subjectId);
+        await deleteDoc(subRef);
+        console.log("Document successfully deleted!");
+      } else {
+        return;
+      }
     } catch (error) {
       console.error("Error deleting subject:", error);
     }
@@ -113,9 +119,9 @@ function Bunkmate() {
             >
               Add Subject
             </button>
-            <button className=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            {/* <button className=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
               Delete Subject
-            </button>
+            </button> */}
           </div>
           <section className="bg-white dark:bg-dark py-10 lg:pb-[120px]">
             <div className="container">
@@ -140,9 +146,9 @@ function Bunkmate() {
                           <th className="w-1/6 min-w-[160px] text-white border-l border-transparent py-4 px-3 text-lg font-medium  lg:py-7 lg:px-4">
                             Attendence percentage
                           </th>
-                          <th className="w-1/6 min-w-[160px] text-white border-l border-transparent py-4 px-3 text-lg font-medium  lg:py-7 lg:px-4">
+                          {/* <th className="w-1/6 min-w-[160px] text-white border-l border-transparent py-4 px-3 text-lg font-medium  lg:py-7 lg:px-4">
                             Register
-                          </th>
+                          </th> */}
                         </tr>
                       </thead>
 
@@ -179,13 +185,13 @@ function Bunkmate() {
                               ).toFixed(2)}
                               %
                             </td>
-                            <td className="text-dark border-b border-[#E8E8E8] bg-white dark:border-dark dark:bg-dark-2 dark:text-dark-7 py-5 px-2 text-center text-base font-medium ">
-                              <a
-                                href="#"
-                                className="inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary  font-medium active:bg-[#3758f9]  active:text-white transition-colors"
-                              >
-                                Edit
-                              </a>
+                            <td
+                              className="text-dark border-b border-[#E8E8E8] bg-white dark:border-dark dark:bg-dark-2 dark:text-dark-7 py-5 px-2 text-center text-base font-medium cursor-pointer"
+                              onClick={() => handleDeleteSubject(doc.id)}
+                            >
+                              <span className="inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary  font-medium active:bg-[#3758f9]  active:text-white transition-colors">
+                                Delete Subject
+                              </span>
                             </td>
                           </tr>
                         ))}
@@ -257,7 +263,7 @@ function Bunkmate() {
                         type="subjectname"
                         name="subjectname"
                         id="subjectname"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 uppercase block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         placeholder="ex : DBMS"
                         onChange={(e) => setSubjectName(e.target.value)}
                         value={subjectName}
@@ -275,13 +281,13 @@ function Bunkmate() {
                         type="number"
                         name="number"
                         id="number"
-                        min={0}
-                        max={100}
+                        min="0"
+                        max="100"
                         placeholder="ex : 10"
                         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required
-                        onChange={(e) => setTotalClasses(e.target.value)}
                         value={Totalclasses}
+                        onChange={(e) => setTotalClasses(e.target.value)}
                       />
                     </div>
                     <div>
@@ -295,18 +301,18 @@ function Bunkmate() {
                         type="number"
                         name="number"
                         id="number"
-                        min={0}
-                        max={100}
+                        min="0"
+                        max="100"
                         placeholder="ex : 5"
                         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required=""
-                        onChange={(e) => setAttendedClasses(e.target.value)}
                         value={attendedClasses}
+                        onChange={(e) => setAttendedClasses(e.target.value)}
                       />
                     </div>
 
                     <button
-                      type="submit"
+                      type="button"
                       className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                       onClick={() => handleAddSubject(subjectName)}
                     >

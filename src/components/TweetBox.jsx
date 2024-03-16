@@ -6,6 +6,7 @@ import badge1 from "../assets/badge1.png";
 import ShowImage from "./ShowImage";
 const tweetBox = ({ tweetTxt, tweetImg, name, username, userImage }) => {
   const [showImage, setShowImage] = useState(false);
+
   const handleImageClick = () => {
     setShowImage(!showImage);
   };
@@ -18,9 +19,12 @@ const tweetBox = ({ tweetTxt, tweetImg, name, username, userImage }) => {
         <div className="w-[40px] h-[40px] flex items-center justify-center bg-red-200 rounded-full">
           <img
             src={userImage}
-            alt=""
             className=" w-full h-full object-cover rounded-full"
+            onClick={() => setShowImage(!showImage)}
           />
+          {showImage && (
+            <ShowImage imgUrl={userImage} onClose={handleCloseImage} />
+          )}
         </div>
         <div className="flex flex-col w-full items-start justify-center ">
           <div className="flex items-center justify-center gap-2 mb-1">

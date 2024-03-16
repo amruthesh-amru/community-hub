@@ -90,18 +90,18 @@ const SignUp = () => {
   };
 
   return (
-    <div className=" w-full h-full">
+    <div className=" w-full  h-screen bg-[#000000e1] bg-opacity-">
       <div className="font-mono ">
         <div className="container mx-auto">
-          <div className="flex justify-center px-6 my-12">
+          <div className="flex justify-center px-6 py-12">
             <div className="w-full xl:w-3/4 lg:w-11/12 flex">
               <div className="w-full h-auto bg-gray-400 hidden lg:block lg:w-5/12 bg-cover rounded-l-lg bgImage"></div>
 
-              <div className="w-full lg:w-7/12 bg-white p-5 rounded-lg lg:rounded-l-none">
+              <div className="w-full lg:w-7/12  p-5 rounded-lg lg:rounded-l-none glass flex flex-col gap-4">
                 <h3 className="pt-4 text-2xl text-center">
                   Create an Account!
                 </h3>
-                <form className="px-8 pt-6 pb-8 mb-4 bg-white rounded">
+                <form className="px-8 pt-6 pb-3 mb-4  rounded glass ">
                   <div className="mb-4 md:flex md:justify-between">
                     <div className="mb-4 md:mr-2 md:mb-0">
                       <label
@@ -212,7 +212,7 @@ const SignUp = () => {
                   </div>
                   <div className="mb-6 text-center">
                     <button
-                      className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                      className="w-full px-4 py-2 font-bold text-white bg-[#1e1e1e] rounded-full hover:bg-[#8f8f8f] focus:outline-none focus:shadow-outline active:bg-[#1e1e1e] transition-colors"
                       onClick={handleSignup}
                     >
                       Register Account
@@ -220,17 +220,18 @@ const SignUp = () => {
                   </div>
                   <hr className="mb-6 border-t" />
                   <div className="text-center">
-                    <a
-                      className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
+                    <NavLink
+                      to="/forgotpassword"
+                      className="inline-block text-sm text-[#1e1e1e] align-baseline hover:text-[#8f8f8f]"
                       href="#"
                     >
                       Forgot Password?
-                    </a>
+                    </NavLink>
                   </div>
                   <div className="text-center">
                     <NavLink to="/login">
                       <div
-                        className="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
+                        className="inline-block text-sm text-[#1e1e1e] align-baseline hover:text-[#8f8f8f]"
                         href="#"
                       >
                         Already have an account? Login!

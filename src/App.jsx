@@ -16,6 +16,7 @@ import FirstSem from "./pages/notes/FirstSem";
 import LostAndFound from "./pages/LostAndFound";
 import JobAndInternship from "./pages/JobAndInternship";
 import Bunkmate from "./pages/Bunkmate";
+import ForgotPassword from "./pages/ForgotPassword";
 function App() {
   const [user, setUser] = useState(null);
   const [isFetching, setIsFetching] = useState(true);
@@ -66,6 +67,7 @@ function App() {
           <Route path="/lostandfound" element={<LostAndFound />} />
           <Route path="/jobandinternship" element={<JobAndInternship />} />
           <Route path="/bunkmate" element={<Bunkmate />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
         </Routes>
       </Router>
     </>

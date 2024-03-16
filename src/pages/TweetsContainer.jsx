@@ -13,12 +13,15 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
+import ShowImage from "../components/ShowImage";
 function TweetsContainer() {
   let [fetchedTweets, setFetchedTweets] = useState([]);
   const [tweetTxt, setTweetTxt] = useState("");
   const [imgPreview, setImgPreview] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [profilePicture, setProfilePicture] = useState("");
+  const [showImage, setShowImage] = useState(false);
+
   const uid = localStorage.getItem("uid");
   const handleTweetTxt = (e) => {
     setTweetTxt(e.target.value);
@@ -112,6 +115,9 @@ function TweetsContainer() {
     });
     return () => unsubscribe();
   }, []);
+  const handleCloseImage = () => {
+    setShowImage(false);
+  };
 
   return (
     <>
@@ -122,7 +128,11 @@ function TweetsContainer() {
               src={profilePicture}
               alt=""
               className="h-full w-full rounded-full object-cover"
+              onClick={() => setShowImage(!showImage)}
             />
+            {showImage && (
+              <ShowImage imgUrl={profilePicture} onClose={handleCloseImage} />
+            )}
           </div>
           <div className="w-full ">
             <form action="">

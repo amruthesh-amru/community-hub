@@ -4,7 +4,7 @@ import Leftbar from "../components/Leftbar";
 function Home() {
   return (
     <>
-      <div className="flex items-start justify-center gap-[5rem] p-3">
+      <div className="flex items-start justify-center gap-[5rem] p-3 glass color">
         <Leftbar />
         {<TweetsContainer />}
       </div>
