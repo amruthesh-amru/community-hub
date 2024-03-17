@@ -16,6 +16,8 @@
     "react-firebase-hooks": "^5.1.1",
     "react-router": "^6.21.3",
     "react-router-dom": "^6.21.3",
+    "react-toastify": "^10.0.5",
+    "toastr": "^2.1.4",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

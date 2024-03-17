@@ -67,7 +67,7 @@ function LostAndFoundBox({
               <img
                 src={tweetImg}
                 alt=""
-                className="rounded-2xl mt-2 w-[50%] h-[30rem] object-cover"
+                className="rounded-2xl mt-2 w-[50%] h-[20rem] object-cover"
                 onClick={handleImageClick}
               />
             )}

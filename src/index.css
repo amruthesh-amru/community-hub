@@ -34,6 +34,10 @@
   animation: spin 1s linear infinite;
 }
 
+#active active {
+  color: #cd9d45;
+  background-color: red;
+}
 @keyframes spin {
   to {
     transform: rotate(360deg);

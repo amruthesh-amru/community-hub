@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import "firebase/firestore";
 import { db } from "../firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   QuerySnapshot,
   addDoc,
@@ -17,6 +19,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import toastr from "toastr";
 function Bunkmate() {
   const [documents, setDocuments] = useState([]);
   const [toggleModal, setToggleModal] = useState(false);
@@ -106,6 +109,31 @@ function Bunkmate() {
       console.error("Error deleting subject:", error);
     }
   };
+  const handleBunkTip = (totalNoOfclasses, classesattended) => {
+    const remainingClassesToBunk = showBunkTip(
+      totalNoOfclasses,
+      classesattended
+    );
+    if (remainingClassesToBunk > 0) {
+      toast(`You Can Still Bunk ${remainingClassesToBunk} Classes`);
+    } else {
+      toast("Attendance is less than 75%");
+    }
+  };
+  const showBunkTip = (totalNoOfclasses, classesattended) => {
+    console.log(totalNoOfclasses, classesattended);
+    let remainingClassesToBunk = 0;
+    let attendancePercentage = (classesattended / totalNoOfclasses) * 100;
+
+    while (attendancePercentage > 75 && classesattended > 0) {
+      classesattended--;
+      remainingClassesToBunk++;
+      attendancePercentage = (classesattended / totalNoOfclasses) * 100;
+    }
+
+    console.log(remainingClassesToBunk);
+    return remainingClassesToBunk;
+  };
 
   return (
     <>
@@ -185,12 +213,23 @@ function Bunkmate() {
                               ).toFixed(2)}
                               %
                             </td>
-                            <td
-                              className="text-dark border-b border-[#E8E8E8] bg-white dark:border-dark dark:bg-dark-2 dark:text-dark-7 py-5 px-2 text-center text-base font-medium cursor-pointer"
-                              onClick={() => handleDeleteSubject(doc.id)}
-                            >
-                              <span className="inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary  font-medium active:bg-[#3758f9]  active:text-white transition-colors">
+                            <td className="text-dark border-b border-[#E8E8E8] bg-white dark:border-dark dark:bg-dark-2 dark:text-dark-7 py-5 px-2 text-center text-base font-medium cursor-pointer flex flex-col gap-1">
+                              <span
+                                className="inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary  font-medium active:bg-[#3758f9]  active:text-white transition-colors"
+                                onClick={() => handleDeleteSubject(doc.id)}
+                              >
                                 Delete Subject
+                              </span>
+                              <span
+                                className="inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary  font-medium active:bg-[#3758f9]  active:text-white transition-colors"
+                                onClick={() =>
+                                  handleBunkTip(
+                                    doc.totalclasses,
+                                    doc.classesattended
+                                  )
+                                }
+                              >
+                                Bunk Tip
                               </span>
                             </td>
                           </tr>
@@ -265,7 +304,9 @@ function Bunkmate() {
                         id="subjectname"
                         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 uppercase block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         placeholder="ex : DBMS"
-                        onChange={(e) => setSubjectName(e.target.value)}
+                        onChange={(e) =>
+                          setSubjectName(e.target.value.toUpperCase())
+                        }
                         value={subjectName}
                         required
                       />

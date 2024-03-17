@@ -56,6 +56,7 @@ function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route
             path="/collab"
             element={
@@ -67,11 +68,39 @@ function App() {
           <Route path="/leftbar" element={<Leftbar />} />
           <Route path="collab/cse" element={<Cse />} />
           <Route path="collab/cse/firstsem" element={<FirstSem />} />
-          <Route path="/addProfilePicture" element={<AddProfilePicture />} />
-          <Route path="/lostandfound" element={<LostAndFound />} />
-          <Route path="/jobandinternship" element={<JobAndInternship />} />
-          <Route path="/bunkmate" element={<Bunkmate />} />
-          <Route path="/forgotpassword" element={<ForgotPassword />} />
+
+          <Route
+            path="/addProfilePicture"
+            element={
+              <ProtectedRoute user={user}>
+                <AddProfilePicture />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/lostandfound"
+            element={
+              <ProtectedRoute user={user}>
+                <LostAndFound />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/jobandinternship"
+            element={
+              <ProtectedRoute user={user}>
+                <JobAndInternship />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/bunkmate"
+            element={
+              <ProtectedRoute user={user}>
+                <Bunkmate />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Router>
     </>
