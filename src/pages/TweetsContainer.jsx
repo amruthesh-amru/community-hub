@@ -79,7 +79,8 @@ function TweetsContainer() {
       uploadResponse = await uploadBytes(imgs, selectedImage);
       uploadedResponse = await getDownloadURL(uploadResponse.ref);
     }
-    const docRef = doc(db, "academicTweets", v4());
+    let v4String = v4();
+    const docRef = doc(db, "academicTweets", v4String);
     const response = await setDoc(
       docRef,
       {
@@ -90,6 +91,7 @@ function TweetsContainer() {
         username: userdetails.username ? userdetails.username : null,
         userImage: userdetails.userImage,
         uploadDateandTime: serverTimestamp(),
+        v4: v4String,
       },
       { merge: true }
     );
@@ -186,11 +188,13 @@ function TweetsContainer() {
             return (
               <TweetBox
                 key={fetchedTweet.id}
+                uid={fetchedTweet.uid}
                 tweetImg={fetchedTweet.tweeImgUrl}
                 tweetTxt={fetchedTweet.tweetTxt}
                 name={fetchedTweet.name}
                 username={fetchedTweet.username}
                 userImage={fetchedTweet.userImage}
+                v4={fetchedTweet.v4}
               />
             );
           })}

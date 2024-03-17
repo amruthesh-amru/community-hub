@@ -35,7 +35,11 @@ function App() {
     });
   }, []);
   if (isFetching) {
-    return <h2>Loading...</h2>;
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+      </div>
+    );
   }
 
   return (

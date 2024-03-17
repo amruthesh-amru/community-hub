@@ -1,20 +1,19 @@
-import React from "react";
-import { deleteDoc, doc } from "firebase/firestore";
-import { useState } from "react";
-import { db } from "../firebase";
+import React, { useState } from "react";
 import ShowImage from "./ShowImage";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../firebase";
 
-const tweetBox = ({
+function LostAndFoundBox({
+  uid,
   tweetTxt,
   tweetImg,
   name,
   username,
   userImage,
   v4,
-  uid,
-}) => {
+}) {
   const [showImage, setShowImage] = useState(false);
-  const [toggleDeletePost, setToggleDeletePost] = useState(false);
+  const [toggleFoundButton, setToggleFoundButton] = useState(false);
   const userId = localStorage.getItem("uid");
   const handleImageClick = () => {
     setShowImage(!showImage);
@@ -22,12 +21,11 @@ const tweetBox = ({
   const handleCloseImage = () => {
     setShowImage(false);
   };
-
-  const handleDeletePost = async () => {
-    const result = confirm("Are You Sure You Want To Delete The Post ?");
+  const handleFoundItem = async () => {
+    const result = confirm("Are You Sure You Want To Mark The Item As Found ?");
     try {
       if (result) {
-        const subRef = doc(db, "academicTweets", v4);
+        const subRef = doc(db, "lostandfound", v4);
         await deleteDoc(subRef);
         console.log("Document successfully deleted!");
       } else {
@@ -37,6 +35,7 @@ const tweetBox = ({
       console.error("Error deleting subject:", error);
     }
   };
+  console.log(uid);
   return (
     <>
       <div className="p-3 flex justify-start gap-4 items-start border border-[rgba(239,243,244,1.00)]">
@@ -51,40 +50,15 @@ const tweetBox = ({
           )}
         </div>
         <div className="flex flex-col w-full items-start justify-center ">
-          <div className="flex items-center justify-between w-full gap-2 mb-1">
-            <div className="flex items-center justify-center gap-2">
-              <h1 className="text-[15px] text-[#0f1419]  font-[700]">{name}</h1>
-              <h2 className="text-[#5d6d79] text-[15px]">@{username}</h2>
-              {/* <h2 className="w-[30px] h-[30px] ">
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <h1 className="text-[15px] text-[#0f1419]  font-[700]">{name}</h1>
+            <h2 className="text-[#5d6d79] text-[15px]">@{username}</h2>
+            {/* <h2 className="w-[30px] h-[30px] ">
               <img src={badge1} alt="" className="" />
             </h2> */}
-              <h3 className="text-[#5d6d79] text-[15px]">~</h3>
-              <h2 className="text-[#5d6d79] text-[15px]">19h</h2>
-            </div>
-            {userId === uid ? (
-              <div
-                className="cursor-pointer"
-                onClick={() => setToggleDeletePost(!toggleDeletePost)}
-              >
-                <i className="fa-solid fa-ellipsis"></i>
-              </div>
-            ) : (
-              " "
-            )}
+            <h3 className="text-[#5d6d79] text-[15px]">~</h3>
+            <h2 className="text-[#5d6d79] text-[15px]">19h</h2>
           </div>
-          {userId === uid
-            ? toggleDeletePost && (
-                <div className="flex justify-end items-end w-full">
-                  <button
-                    className="bg-gray-100 p-2 relative top-2"
-                    onClick={handleDeletePost}
-                  >
-                    {" "}
-                    Delete Post
-                  </button>
-                </div>
-              )
-            : " "}
           <div className=" text-[15px] text-[#0f1419]  font-[400]">
             {tweetTxt}
           </div>
@@ -101,10 +75,25 @@ const tweetBox = ({
               <ShowImage imgUrl={tweetImg} onClose={handleCloseImage} />
             )}
           </div>
+          {userId === uid ? (
+            <div className="flex justify-center gap-10 w-full items-center pt-5 ">
+              <h1 className="text-[1.3rem] font-[700]">Found Item ?</h1>
+              <div className="flex items-center justify-center gap-4">
+                <button
+                  className="text-white font-[600] rounded-full pl-6 pr-6 pt-1 pb-1 bg-[#5cb85c]"
+                  onClick={handleFoundItem}
+                >
+                  Yes
+                </button>
+              </div>
+            </div>
+          ) : (
+            " "
+          )}
         </div>
       </div>
     </>
   );
-};
+}
 
-export default tweetBox;
+export default LostAndFoundBox;

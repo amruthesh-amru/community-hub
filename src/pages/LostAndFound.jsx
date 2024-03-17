@@ -14,6 +14,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import Leftbar from "../components/Leftbar";
+import LostAndFoundBox from "../components/LostAndFoundBox";
 function LostAndFound() {
   let [fetchedTweets, setFetchedTweets] = useState([]);
   const [tweetTxt, setTweetTxt] = useState("");
@@ -77,7 +78,9 @@ function LostAndFound() {
       uploadResponse = await uploadBytes(imgs, selectedImage);
       uploadedResponse = await getDownloadURL(uploadResponse.ref);
     }
-    const docRef = doc(db, "lostandfound", v4());
+    let v4String = v4();
+    console.log("v4", v4String);
+    const docRef = doc(db, "lostandfound", v4String);
     const response = await setDoc(
       docRef,
       {
@@ -88,6 +91,7 @@ function LostAndFound() {
         username: userdetails.username ? userdetails.username : null,
         userImage: userdetails.userImage,
         uploadDateandTime: serverTimestamp(),
+        v4: v4String,
       },
       { merge: true }
     );
@@ -176,8 +180,10 @@ function LostAndFound() {
           <div className="w-full">
             {fetchedTweets.map((fetchedTweet) => {
               return (
-                <TweetBox
+                <LostAndFoundBox
                   key={fetchedTweet.id}
+                  uid={fetchedTweet.uid}
+                  v4={fetchedTweet.v4}
                   tweetImg={fetchedTweet.tweeImgUrl}
                   tweetTxt={fetchedTweet.tweetTxt}
                   name={fetchedTweet.name}
