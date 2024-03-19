@@ -19,7 +19,6 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import toastr from "toastr";
 function Bunkmate() {
   const [documents, setDocuments] = useState([]);
   const [toggleModal, setToggleModal] = useState(false);
@@ -117,7 +116,7 @@ function Bunkmate() {
     if (remainingClassesToBunk > 0) {
       toast(`You Can Still Bunk ${remainingClassesToBunk} Classes`);
     } else {
-      toast("Attendance is less than 75%");
+      toast.error("Attendance is less than 75%");
     }
   };
   const showBunkTip = (totalNoOfclasses, classesattended) => {

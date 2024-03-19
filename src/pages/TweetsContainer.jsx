@@ -27,10 +27,7 @@ function TweetsContainer() {
     setTweetTxt(e.target.value);
   };
 
-  // get user details to know who is posting the tweet
   let userdetails;
-  // let tempProfile;
-
   const fetchUserDetails = async () => {
     try {
       console.log(uid);
@@ -51,7 +48,6 @@ function TweetsContainer() {
     }
   };
 
-  //selectedImage is the file/image that has been selected to post the tweet
   const handletweetImageUpload = (e) => {
     let tempImg = e.target.files[0];
     console.log(tempImg, "tempImg🧀🧀");
@@ -89,7 +85,7 @@ function TweetsContainer() {
         uid: uid,
         name: userdetails.name ? userdetails.name : null,
         username: userdetails.username ? userdetails.username : null,
-        userImage: userdetails.userImage,
+        userImage: userdetails.userImage ? userdetails.userImage : null,
         uploadDateandTime: serverTimestamp(),
         v4: v4String,
       },

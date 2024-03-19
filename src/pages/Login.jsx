@@ -4,6 +4,8 @@ import { useState } from "react";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,13 +22,13 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      alert("Account successfully Logged In");
+      toast("Successfully Logged Into Your Account");
       console.log(response);
       localStorage.setItem("uid", response.user.uid);
 
       navigate("/");
     } catch (error) {
-      alert(error);
+      toast(error);
     }
   };
 

@@ -3,7 +3,8 @@ import { deleteDoc, doc } from "firebase/firestore";
 import { useState } from "react";
 import { db } from "../firebase";
 import ShowImage from "./ShowImage";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const tweetBox = ({
   tweetTxt,
   tweetImg,
@@ -29,12 +30,12 @@ const tweetBox = ({
       if (result) {
         const subRef = doc(db, "academicTweets", v4);
         await deleteDoc(subRef);
-        console.log("Document successfully deleted!");
+        toast.info("Tweet successfully deleted!");
       } else {
         return;
       }
     } catch (error) {
-      console.error("Error deleting subject:", error);
+      toast("Error deleting subject:", error);
     }
   };
   return (

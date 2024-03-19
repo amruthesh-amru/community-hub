@@ -15,6 +15,8 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { NavLink } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -58,7 +60,7 @@ const SignUp = () => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
       .then((credentials) => {
-        alert("Account successfully created");
+        toast("Account successfully created");
         console.log("🧀", credentials);
         setCreds(credentials);
         setToken(credentials.user.accessToken);
@@ -84,7 +86,7 @@ const SignUp = () => {
       })
       .catch((error) => {
         // Handle error if createUserWithEmailAndPassword fails
-        alert("Error signing up:", error);
+        toast("Error signing up:", error);
         // You might want to show an error message to the user
       });
   };

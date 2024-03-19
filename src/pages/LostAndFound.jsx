@@ -89,7 +89,7 @@ function LostAndFound() {
         uid: uid,
         name: userdetails.name ? userdetails.name : null,
         username: userdetails.username ? userdetails.username : null,
-        userImage: userdetails.userImage,
+        userImage: userdetails.userImage ? userdetails.userImage : null,
         uploadDateandTime: serverTimestamp(),
         v4: v4String,
       },
