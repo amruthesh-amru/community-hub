@@ -8,7 +8,7 @@ import Footer from "./components/Footer.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <App />
-    <Footer />
+    {/* <Footer /> */}
     <ToastContainer />
   </React.StrictMode>
 );

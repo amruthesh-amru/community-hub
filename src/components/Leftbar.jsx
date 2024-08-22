@@ -80,6 +80,7 @@ function Leftbar() {
                 Emergency Alerts
               </span>
             </li> */}
+
             <li id="active" className="flex items-center justify-start">
               <button
                 className="pl-[32px] pt-2 pb-2 text-center text-white font-[600] bg-[#1d9bf0] pr-[32px] rounded-full self-start"

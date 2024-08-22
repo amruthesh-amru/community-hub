@@ -17,6 +17,7 @@ import LostAndFound from "./pages/LostAndFound";
 import JobAndInternship from "./pages/JobAndInternship";
 import Bunkmate from "./pages/Bunkmate";
 import ForgotPassword from "./pages/ForgotPassword";
+import Exam from "./pages/Exam";
 function App() {
   const [user, setUser] = useState(null);
   const [isFetching, setIsFetching] = useState(true);
@@ -98,6 +99,14 @@ function App() {
             element={
               <ProtectedRoute user={user}>
                 <Bunkmate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/exam"
+            element={
+              <ProtectedRoute user={user}>
+                <Exam />
               </ProtectedRoute>
             }
           />
